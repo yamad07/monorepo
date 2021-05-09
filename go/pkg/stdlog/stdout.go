@@ -3,8 +3,8 @@ package stdlog
 import (
 	"fmt"
 
-	"github.com/ispec-inc/monorepo/go/pkg/applog/logger"
 	"github.com/k0kubun/pp"
+	"github.com/yamad07/monorepo/go/pkg/applog/logger"
 )
 
 type Logger struct{}

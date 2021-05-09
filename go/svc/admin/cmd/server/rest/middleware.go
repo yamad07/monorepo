@@ -1,10 +1,10 @@
-package main
+package rest
 
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 
-	"github.com/ispec-inc/monorepo/go/pkg/config"
+	"github.com/yamad07/monorepo/go/pkg/config"
 )
 
 func commonMiddleware(r *chi.Mux) *chi.Mux {

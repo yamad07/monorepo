@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/ispec-inc/monorepo/go/svc/admin/pkg/controller/rest/v1/article"
+	"github.com/yamad07/monorepo/go/svc/admin/pkg/controller/rest/v1/article"
 )
 
 func NewRouter() http.Handler {

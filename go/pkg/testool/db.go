@@ -3,7 +3,7 @@ package testool
 import (
 	"testing"
 
-	"github.com/ispec-inc/monorepo/go/pkg/mysql"
+	"github.com/yamad07/monorepo/go/pkg/mysql"
 	"gorm.io/gorm"
 )
 

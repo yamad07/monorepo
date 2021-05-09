@@ -6,12 +6,12 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi"
-	"github.com/ispec-inc/monorepo/go/pkg/applog"
-	"github.com/ispec-inc/monorepo/go/pkg/presenter"
-	pb "github.com/ispec-inc/monorepo/go/proto/admin/api/rest/v1/article"
-	"github.com/ispec-inc/monorepo/go/svc/admin/pkg/logger"
-	"github.com/ispec-inc/monorepo/go/svc/admin/pkg/model"
-	"github.com/ispec-inc/monorepo/go/svc/admin/pkg/view"
+	"github.com/yamad07/monorepo/go/pkg/applog"
+	"github.com/yamad07/monorepo/go/pkg/presenter"
+	pb "github.com/yamad07/monorepo/go/proto/admin/api/rest/v1/article"
+	"github.com/yamad07/monorepo/go/svc/admin/pkg/logger"
+	"github.com/yamad07/monorepo/go/svc/admin/pkg/model"
+	"github.com/yamad07/monorepo/go/svc/admin/pkg/view"
 )
 
 type controller struct {

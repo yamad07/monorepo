@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/ispec-inc/monorepo/go/svc/article/pkg/registry"
+	"github.com/yamad07/monorepo/go/svc/article/pkg/registry"
 )
 
 func NewRouter(rgst registry.Registry) http.Handler {

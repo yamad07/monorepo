@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/ispec-inc/monorepo/go/pkg/apperror"
+	"github.com/yamad07/monorepo/go/pkg/apperror"
 	"gorm.io/gorm"
 )
 

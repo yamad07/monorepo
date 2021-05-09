@@ -1,15 +1,15 @@
 version: '2.2'
 services:
-  article-api:
+  api:
     container_name: article-api
     build:
       context: .
       dockerfile: docker/dev/Dockerfile
-    command: realize start --name article --run
+    command: realize start --name server --run
     ports:
       - "9000:9000"
     env_file:
-      - .env/article
+      - .env/default
     depends_on:
       - article-mysql
     volumes:
@@ -17,25 +17,7 @@ services:
     working_dir: /app
     networks:
       - monorepo
-  
-  admin-api:
-    container_name: admin-api
-    build:
-      context: .
-      dockerfile: docker/dev/Dockerfile
-    command: realize start --name admin --run
-    ports:
-      - "9001:9001"
-    env_file:
-      - .env/admin
-    depends_on:
-      - article-mysql
-    volumes:
-      - ./:/app
-    working_dir: /app
-    networks:
-      - monorepo
-  
+
   test:
     container_name: test
     image: golang:1.16
@@ -48,7 +30,7 @@ services:
     working_dir: /app
     networks:
       - monorepo
-  
+
   article-mysql:
     container_name: article-mysql
     image: mysql:5.7

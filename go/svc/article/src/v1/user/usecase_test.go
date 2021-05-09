@@ -5,13 +5,13 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/ispec-inc/monorepo/go/pkg/applog"
+	"github.com/yamad07/monorepo/go/pkg/applog"
 
 	gomock "github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/ispec-inc/monorepo/go/svc/article/pkg/domain/model"
-	mock_repository "github.com/ispec-inc/monorepo/go/svc/article/pkg/domain/repository/mock"
+	"github.com/yamad07/monorepo/go/svc/article/pkg/domain/model"
+	mock_repository "github.com/yamad07/monorepo/go/svc/article/pkg/domain/repository/mock"
 )
 
 func TestUserUsecase_Get(t *testing.T) {

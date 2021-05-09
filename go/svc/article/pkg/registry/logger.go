@@ -1,10 +1,10 @@
 package registry
 
 import (
-	"github.com/ispec-inc/monorepo/go/pkg/applog/logger"
-	"github.com/ispec-inc/monorepo/go/pkg/config"
-	"github.com/ispec-inc/monorepo/go/pkg/sentry"
-	"github.com/ispec-inc/monorepo/go/pkg/stdlog"
+	"github.com/yamad07/monorepo/go/pkg/applog/logger"
+	"github.com/yamad07/monorepo/go/pkg/config"
+	"github.com/yamad07/monorepo/go/pkg/sentry"
+	"github.com/yamad07/monorepo/go/pkg/stdlog"
 )
 
 type Logger struct {

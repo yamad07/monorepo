@@ -3,8 +3,8 @@ package sentry
 import (
 	"time"
 
-	"github.com/getsentry/sentry-go"
-	"github.com/ispec-inc/monorepo/go/pkg/applog/logger"
+	sentry "github.com/getsentry/sentry-go"
+	"github.com/yamad07/monorepo/go/pkg/applog/logger"
 )
 
 type Logger struct{}

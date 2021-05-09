@@ -5,9 +5,10 @@
 package mock_repository
 
 import (
-	gomock "github.com/golang/mock/gomock"
-	model "github.com/ispec-inc/monorepo/go/svc/article/pkg/domain/model"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
+	model "github.com/yamad07/monorepo/go/svc/article/pkg/domain/model"
 )
 
 // MockUser is a mock of User interface.

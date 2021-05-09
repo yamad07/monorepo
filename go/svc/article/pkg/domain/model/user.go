@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/ispec-inc/monorepo/go/pkg/infra/entity"
+	"github.com/yamad07/monorepo/go/pkg/infra/entity"
 )
 
 type User struct {
