@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/yamad07/monorepo/go/pkg/applog"
+	"github.com/yamad07/monorepo/go/pkg/msgbs"
 	"github.com/yamad07/monorepo/go/pkg/presenter"
 	pb "github.com/yamad07/monorepo/go/proto/admin/api/rest/v1/article"
 	"github.com/yamad07/monorepo/go/svc/admin/pkg/logger"
@@ -15,12 +16,14 @@ import (
 )
 
 type controller struct {
-	log applog.AppLog
+	log    applog.AppLog
+	pubsub msgbs.RedisPubSub
 }
 
-func newController() controller {
+func newController(pubsub msgbs.RedisPubSub) controller {
 	return controller{
-		log: applog.New(logger.Get()),
+		log:    applog.New(logger.Get()),
+		pubsub: pubsub,
 	}
 }
 
@@ -81,6 +84,7 @@ func (c controller) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	c.pubsub.Publish(msgbs.AddArticle, msgbs.Article{Title: atl.Title})
 	presenter.Response(w, &pb.CreateResponse{
 		Articles: view.NewArticles(atls),
 	})

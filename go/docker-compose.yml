@@ -12,6 +12,7 @@ services:
       - .env/default
     depends_on:
       - article-mysql
+      - message-bus-redis
     volumes:
       - ./:/app
     working_dir: /app
@@ -30,6 +31,14 @@ services:
     working_dir: /app
     networks:
       - monorepo
+
+  message-bus-redis:
+    container_name: message-bus-redis
+    image: redis:6.2
+    networks:
+      - monorepo
+    volumes:
+      - ./data/redis:/data
 
   article-mysql:
     container_name: article-mysql
