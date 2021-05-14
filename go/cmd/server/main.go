@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -22,29 +23,81 @@ import (
 
 func main() {
 
-	rcon, err := redis.New()
+	bs, err := msgbsConn()
 	if err != nil {
 		panic(err)
+	}
+
+	hr, hclnup, err := httpRouter(bs)
+	if err != nil {
+		panic(err)
+	}
+	defer hclnup()
+
+	sr, sclnup, err := subscribeRouter()
+	if err != nil {
+		panic(err)
+	}
+	defer sclnup()
+
+	ctx := context.Background()
+
+	g, ctx := errgroup.WithContext(ctx)
+
+	g.Go(func() error {
+		port := fmt.Sprintf(":%d", config.Router.Port)
+		err := http.ListenAndServe(port, hr)
+		if err != nil && err != http.ErrServerClosed {
+			return err
+		}
+
+		return nil
+	})
+
+	g.Go(func() error {
+		sr.Serve(bs)
+		return nil
+	})
+	gracefulStop(g, ctx)
+}
+
+func msgbsConn() (msgbs.MessageBus, error) {
+	rcon, err := redis.New()
+	if err != nil {
+		return nil, err
 	}
 
 	pscon, err := redis.NewPubSub()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	bs := msgbs.NewRedis(pscon, &rcon)
-	// TODO pointer
-	adh, adclnup, err := admin_rest.NewRouter(*bs)
+
+	return bs, nil
+}
+
+func subscribeRouter() (*msgbs.Router, func() error, error) {
+	atclevnt, evntclnup, err := article_event.NewRouter()
 	if err != nil {
-		panic(err)
+		return nil, nil, err
 	}
-	defer adclnup()
+
+	sr := msgbs.NewRouter()
+	sr.Mount(atclevnt)
+	return &sr, evntclnup, nil
+}
+
+func httpRouter(bs msgbs.MessageBus) (http.Handler, func() error, error) {
+	adh, adclnup, err := admin_rest.NewRouter(bs)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	atclh, arclclnup, err := article_rest.NewRouter()
 	if err != nil {
-		panic(err)
+		return nil, nil, err
 	}
-	defer arclclnup()
 
 	r := chi.NewRouter()
 
@@ -54,54 +107,42 @@ func main() {
 		presenter.Response(w, map[string]string{"messsage": "ok"})
 	})
 
-	port := fmt.Sprintf(":%d", config.Router.Port)
-
-	atclevnt, evntclnup, err := article_event.NewRouter()
-	if err != nil {
-		panic(err)
-	}
-	defer evntclnup()
-
-	sr := msgbs.NewRouter()
-	sr.Mount(atclevnt)
-
-	ctx := context.Background()
-
-	g, ctx := errgroup.WithContext(ctx)
-
-	g.Go(func() error {
-		if err := http.ListenAndServe(port, r); err != nil && err != http.ErrServerClosed {
+	clnup := func() error {
+		err := adclnup()
+		if err != nil {
 			return err
 		}
 
+		err = arclclnup()
+		if err != nil {
+			return err
+		}
 		return nil
-	})
+	}
 
-	g.Go(func() error {
-		// TODO error handling
-		sr.Serve(bs)
-		return nil
-	})
+	return r, clnup, nil
 
+}
+
+func gracefulStop(g *errgroup.Group, ctx context.Context) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	interrupt := make(chan os.Signal, 1)
+	cs := make(chan os.Signal, 1)
+	signal.Notify(cs, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+
 	select {
-	case <-interrupt:
-		break
 	case <-ctx.Done():
 		break
+	case <-cs:
+		break
 	}
 
-	_, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer shutdownCancel()
+	_, tcancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer tcancel()
 
-	err = g.Wait()
+	err := g.Wait()
 	if err != nil {
-		log.Printf("server returning an error %v\n", err)
 		os.Exit(2)
 	}
-
-	log.Println("all servers are stopped")
 }
