@@ -12,11 +12,13 @@ type Subscriber interface {
 }
 
 type Router struct {
+	MessageBus  MessageBus
 	Subscribers map[Event]Subscriber
 }
 
-func NewRouter() Router {
+func NewRouter(bs MessageBus) Router {
 	return Router{
+		MessageBus:  bs,
 		Subscribers: map[Event]Subscriber{},
 	}
 }
@@ -31,12 +33,12 @@ func (r Router) Subscribe(evnt Event, subsc Subscriber) {
 	r.Subscribers[evnt] = subsc
 }
 
-func (r Router) Serve(bs MessageBus) {
+func (r Router) Serve() {
 	for evnt, subsc := range r.Subscribers {
-		bs.Subscribe(evnt)
+		r.MessageBus.Subscribe(evnt)
 		go func(subsc Subscriber) {
 			for {
-				switch v := bs.Receive().(type) {
+				switch v := r.MessageBus.Receive().(type) {
 				case redis.Message:
 					err := subsc.Do(v)
 					log.Println(err)
