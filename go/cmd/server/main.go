@@ -14,16 +14,27 @@ import (
 	"github.com/yamad07/monorepo/go/pkg/config"
 	"github.com/yamad07/monorepo/go/pkg/msgbs"
 	"github.com/yamad07/monorepo/go/pkg/presenter"
+	"github.com/yamad07/monorepo/go/pkg/redis"
 	admin_rest "github.com/yamad07/monorepo/go/svc/admin/cmd/server/rest"
 	article_event "github.com/yamad07/monorepo/go/svc/article/cmd/server/event"
 	article_rest "github.com/yamad07/monorepo/go/svc/article/cmd/server/rest"
 )
 
 func main() {
-	msgbs.Init(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
-	ps := msgbs.NewRedis()
+
+	rcon, err := redis.New()
+	if err != nil {
+		panic(err)
+	}
+
+	pscon, err := redis.NewPubSub()
+	if err != nil {
+		panic(err)
+	}
+
+	bs := msgbs.NewRedis(pscon, &rcon)
 	// TODO pointer
-	adh, adclnup, err := admin_rest.NewRouter(*ps)
+	adh, adclnup, err := admin_rest.NewRouter(*bs)
 	if err != nil {
 		panic(err)
 	}
@@ -68,7 +79,7 @@ func main() {
 
 	g.Go(func() error {
 		// TODO error handling
-		sr.Serve()
+		sr.Serve(bs)
 		return nil
 	})
 

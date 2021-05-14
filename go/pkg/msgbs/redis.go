@@ -6,44 +6,34 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-type RedisPubSub struct {
-	Conn      *redis.PubSubConn
-	RedisConn *redis.Conn
+type RedisMessageBus struct {
+	PubSubConn *redis.PubSubConn
+	Conn       *redis.Conn
 }
 
-var redisHost string
-
-func Init(host string, port string) {
-	redisHost = host + ":" + port
-}
-
-func NewRedis() *RedisPubSub {
-	redisConn, err := redis.Dial("tcp", redisHost)
-	if err != nil {
-		panic(err)
+func NewRedis(pscon *redis.PubSubConn, conn *redis.Conn) *RedisMessageBus {
+	return &RedisMessageBus{
+		PubSubConn: pscon,
+		Conn:       conn,
 	}
-	redisPubSub := &RedisPubSub{}
-	redisPubSub.Conn = &redis.PubSubConn{Conn: redisConn}
-	redisPubSub.RedisConn = &redisConn
-	return redisPubSub
 }
 
-func (r *RedisPubSub) Publish(evnt Event, msg Message) error {
+func (r RedisMessageBus) Publish(evnt Event, msg Message) error {
 	j, err := json.Marshal(msg)
 	if err != nil {
 		return err
 	}
 
-	redisConn := *r.RedisConn
-	_, err = redisConn.Do("PUBLISH", evnt, string(j))
+	rcon := *r.Conn
+	_, err = rcon.Do("PUBLISH", evnt, string(j))
 
 	return err
 }
 
-func (r *RedisPubSub) Subscribe(evnt Event) {
-	r.Conn.Subscribe(evnt)
+func (r RedisMessageBus) Subscribe(evnt Event) {
+	r.PubSubConn.Subscribe(evnt)
 }
 
-func (r *RedisPubSub) Receive() interface{} {
-	return r.Conn.Receive()
+func (r RedisMessageBus) Receive() interface{} {
+	return r.PubSubConn.Receive()
 }

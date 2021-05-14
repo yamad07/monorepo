@@ -12,7 +12,7 @@ import (
 	"github.com/yamad07/monorepo/go/svc/admin/pkg/logger"
 )
 
-func NewRouter(pubsub msgbs.RedisPubSub) (http.Handler, func() error, error) {
+func NewRouter(bs msgbs.MessageBus) (http.Handler, func() error, error) {
 	if err := database.Init(nil); err != nil {
 		return nil, nil, err
 	}
@@ -24,7 +24,7 @@ func NewRouter(pubsub msgbs.RedisPubSub) (http.Handler, func() error, error) {
 	r := chi.NewRouter()
 	r = commonMiddleware(r)
 
-	r.Mount("/v1", v1.NewRouter(pubsub))
+	r.Mount("/v1", v1.NewRouter(bs))
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		presenter.Response(w, map[string]string{"messsage": "ok"})

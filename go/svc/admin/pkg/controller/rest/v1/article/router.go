@@ -7,9 +7,9 @@ import (
 	"github.com/yamad07/monorepo/go/pkg/msgbs"
 )
 
-func New(pubsub msgbs.RedisPubSub) http.Handler {
+func New(bs msgbs.MessageBus) http.Handler {
 	r := chi.NewRouter()
-	h := newController(pubsub)
+	h := newController(bs)
 
 	r.Get("/", h.list)
 	r.Get("/{id}", h.get)

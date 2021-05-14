@@ -31,13 +31,12 @@ func (r Router) Subscribe(evnt Event, subsc Subscriber) {
 	r.Subscribers[evnt] = subsc
 }
 
-func (r Router) Serve() {
-	ps := NewRedis()
+func (r Router) Serve(bs MessageBus) {
 	for evnt, subsc := range r.Subscribers {
-		ps.Subscribe(evnt)
+		bs.Subscribe(evnt)
 		go func(subsc Subscriber) {
 			for {
-				switch v := ps.Receive().(type) {
+				switch v := bs.Receive().(type) {
 				case redis.Message:
 					err := subsc.Do(v)
 					log.Println(err)

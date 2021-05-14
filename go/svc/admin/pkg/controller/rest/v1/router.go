@@ -8,10 +8,10 @@ import (
 	"github.com/yamad07/monorepo/go/svc/admin/pkg/controller/rest/v1/article"
 )
 
-func NewRouter(pubsub msgbs.RedisPubSub) http.Handler {
+func NewRouter(bs msgbs.MessageBus) http.Handler {
 	r := chi.NewRouter()
 
-	r.Mount("/articles", article.New(pubsub))
+	r.Mount("/articles", article.New(bs))
 
 	return r
 }

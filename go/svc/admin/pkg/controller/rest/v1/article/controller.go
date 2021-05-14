@@ -16,14 +16,14 @@ import (
 )
 
 type controller struct {
-	log    applog.AppLog
-	pubsub msgbs.RedisPubSub
+	log applog.AppLog
+	bs  msgbs.MessageBus
 }
 
-func newController(pubsub msgbs.RedisPubSub) controller {
+func newController(bs msgbs.MessageBus) controller {
 	return controller{
-		log:    applog.New(logger.Get()),
-		pubsub: pubsub,
+		log: applog.New(logger.Get()),
+		bs:  bs,
 	}
 }
 
@@ -84,7 +84,7 @@ func (c controller) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.pubsub.Publish(msgbs.AddArticle, msgbs.Article{Title: atl.Title})
+	c.bs.Publish(msgbs.AddArticle, msgbs.Article{Title: atl.Title})
 	presenter.Response(w, &pb.CreateResponse{
 		Articles: view.NewArticles(atls),
 	})
