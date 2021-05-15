@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/ispec-inc/monorepo/go/pkg/apperror"
-	"github.com/ispec-inc/monorepo/go/pkg/applog/logger"
 	"github.com/pkg/errors"
+	"github.com/yamad07/monorepo/go/pkg/apperror"
+	"github.com/yamad07/monorepo/go/pkg/applog/logger"
 )
 
 type AppLog struct {

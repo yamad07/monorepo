@@ -3,10 +3,10 @@ package model
 import (
 	"testing"
 
-	"github.com/ispec-inc/monorepo/go/pkg/infra/entity"
-	"github.com/ispec-inc/monorepo/go/pkg/testool"
-	"github.com/ispec-inc/monorepo/go/svc/admin/pkg/database"
 	"github.com/stretchr/testify/assert"
+	"github.com/yamad07/monorepo/go/pkg/infra/entity"
+	"github.com/yamad07/monorepo/go/pkg/testool"
+	"github.com/yamad07/monorepo/go/svc/admin/pkg/database"
 )
 
 func TestArticleModel_Find(t *testing.T) {

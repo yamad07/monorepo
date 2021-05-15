@@ -3,11 +3,11 @@ package user
 import (
 	"context"
 
-	"github.com/ispec-inc/monorepo/go/pkg/apperror"
-	"github.com/ispec-inc/monorepo/go/pkg/applog"
-	"github.com/ispec-inc/monorepo/go/svc/article/pkg/domain/model"
-	"github.com/ispec-inc/monorepo/go/svc/article/pkg/domain/repository"
-	"github.com/ispec-inc/monorepo/go/svc/article/pkg/registry"
+	"github.com/yamad07/monorepo/go/pkg/apperror"
+	"github.com/yamad07/monorepo/go/pkg/applog"
+	"github.com/yamad07/monorepo/go/svc/article/pkg/domain/model"
+	"github.com/yamad07/monorepo/go/svc/article/pkg/domain/repository"
+	"github.com/yamad07/monorepo/go/svc/article/pkg/registry"
 )
 
 type Usecase struct {

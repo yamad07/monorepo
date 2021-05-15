@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"github.com/ispec-inc/monorepo/go/pkg/config"
+	"github.com/yamad07/monorepo/go/pkg/config"
 )
 
 func New() (*gorm.DB, error) {

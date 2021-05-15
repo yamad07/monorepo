@@ -3,7 +3,7 @@ package presenter
 import (
 	"net/http"
 
-	"github.com/ispec-inc/monorepo/go/pkg/apperror"
+	"github.com/yamad07/monorepo/go/pkg/apperror"
 )
 
 var code2status = map[apperror.Code]int{

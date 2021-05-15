@@ -3,12 +3,12 @@ package mysql
 import (
 	"fmt"
 
+	txdb "github.com/DATA-DOG/go-txdb"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"github.com/DATA-DOG/go-txdb"
-	"github.com/ispec-inc/monorepo/go/pkg/config"
+	"github.com/yamad07/monorepo/go/pkg/config"
 )
 
 const driver = "txdb"

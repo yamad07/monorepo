@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/go-chi/chi"
-	"github.com/ispec-inc/monorepo/go/pkg/applog"
+	"github.com/yamad07/monorepo/go/pkg/applog"
 )
 
 type request struct {

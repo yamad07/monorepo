@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/ispec-inc/monorepo/go/svc/article/pkg/domain/model"
+	"github.com/yamad07/monorepo/go/svc/article/pkg/domain/model"
 )
 
 type GetOutput struct {

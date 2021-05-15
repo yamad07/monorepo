@@ -1,8 +1,8 @@
 package view
 
 import (
-	pb "github.com/ispec-inc/monorepo/go/proto/article/view"
-	"github.com/ispec-inc/monorepo/go/svc/article/pkg/domain/model"
+	pb "github.com/yamad07/monorepo/go/proto/article/view"
+	"github.com/yamad07/monorepo/go/svc/article/pkg/domain/model"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

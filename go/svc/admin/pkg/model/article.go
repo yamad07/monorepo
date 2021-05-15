@@ -3,9 +3,9 @@ package model
 import (
 	"errors"
 
-	"github.com/ispec-inc/monorepo/go/pkg/apperror"
-	"github.com/ispec-inc/monorepo/go/pkg/infra/entity"
-	"github.com/ispec-inc/monorepo/go/svc/admin/pkg/database"
+	"github.com/yamad07/monorepo/go/pkg/apperror"
+	"github.com/yamad07/monorepo/go/pkg/infra/entity"
+	"github.com/yamad07/monorepo/go/svc/admin/pkg/database"
 	"go.uber.org/multierr"
 )
 
