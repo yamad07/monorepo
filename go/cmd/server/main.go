@@ -55,13 +55,13 @@ func msgbsConn() (msgbs.MessageBus, error) {
 	return bs, nil
 }
 
-func subscribeRouter(bs msgbs.MessageBus) (*msgbs.Router, func() error, error) {
-	atclevnt, evntclnup, err := article_event.NewRouter()
+func subscribeRouter(bs msgbs.MessageBus) (*msgbs.Subscriber, func() error, error) {
+	atclevnt, evntclnup, err := article_event.NewSubscriber(bs)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	sr := msgbs.NewRouter(bs)
+	sr := msgbs.NewSubscriber(bs)
 	sr.Mount(atclevnt)
 	return &sr, evntclnup, nil
 }

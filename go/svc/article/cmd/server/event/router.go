@@ -6,15 +6,15 @@ import (
 	"github.com/yamad07/monorepo/go/svc/article/pkg/registry"
 )
 
-func NewRouter() (msgbs.Router, func() error, error) {
+func NewSubscriber(bs msgbs.MessageBus) (msgbs.Subscriber, func() error, error) {
 	repo, repoCleanup, err := registry.NewRepository()
 	if err != nil {
-		return msgbs.Router{}, nil, err
+		return msgbs.Subscriber{}, nil, err
 	}
 
 	lgr, lgrCleanup, err := registry.NewLogger()
 	if err != nil {
-		return msgbs.Router{}, nil, err
+		return msgbs.Subscriber{}, nil, err
 	}
 	cleanup := func() error {
 		repoCleanup()
@@ -23,10 +23,11 @@ func NewRouter() (msgbs.Router, func() error, error) {
 	}
 
 	rgst := registry.NewRegistry(repo, lgr)
-	r := msgbs.NewRouter()
+	r := msgbs.NewSubscriber(bs)
 
 	subsc := notification.NewSubscriber(rgst)
-	r.Subscribe(msgbs.AddArticle, subsc)
+
+	r.Subscribe(msgbs.AddArticle, subsc.Notify)
 
 	return r, cleanup, nil
 }

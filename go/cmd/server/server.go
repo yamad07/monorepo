@@ -15,17 +15,17 @@ import (
 )
 
 type Server struct {
-	HTTPHandler     http.Handler
-	SubscribeRouter *msgbs.Router
+	HTTPHandler http.Handler
+	Subscriber  *msgbs.Subscriber
 }
 
 func NewServer(
 	h http.Handler,
-	r *msgbs.Router,
+	r *msgbs.Subscriber,
 ) Server {
 	return Server{
-		HTTPHandler:     h,
-		SubscribeRouter: r,
+		HTTPHandler: h,
+		Subscriber:  r,
 	}
 }
 
@@ -42,7 +42,7 @@ func (s Server) Run(ctx context.Context) {
 	})
 
 	g.Go(func() error {
-		s.SubscribeRouter.Serve()
+		s.Subscriber.Serve()
 		return nil
 	})
 

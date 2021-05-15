@@ -20,7 +20,7 @@ func NewSubscriber(rgst registry.Registry) Subscriber {
 }
 
 // Print err handling
-func (s Subscriber) Do(msg redis.Message) error {
+func (s Subscriber) Notify(msg redis.Message) error {
 	var m msgbs.Article
 	err := json.Unmarshal(msg.Data, &m)
 	if err != nil {
