@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi"
 
+	"github.com/yamad07/monorepo/go/pkg/config"
 	"github.com/yamad07/monorepo/go/pkg/msgbs"
 	"github.com/yamad07/monorepo/go/pkg/presenter"
 	"github.com/yamad07/monorepo/go/pkg/redis"
@@ -21,13 +23,13 @@ func main() {
 		panic(err)
 	}
 
-	hr, hclnup, err := httpRouter(bs)
+	svr, hclnup, err := httpRouter(bs)
 	if err != nil {
 		panic(err)
 	}
 	defer hclnup()
 
-	sr, sclnup, err := subscribeRouter(bs)
+	sub, sclnup, err := subscribeRouter(bs)
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +37,7 @@ func main() {
 
 	ctx := context.Background()
 
-	server := NewServer(hr, sr)
+	server := NewServer(svr, sub)
 	server.Run(ctx)
 }
 
@@ -66,7 +68,7 @@ func subscribeRouter(bs msgbs.MessageBus) (*msgbs.Subscriber, func() error, erro
 	return &sr, evntclnup, nil
 }
 
-func httpRouter(bs msgbs.MessageBus) (http.Handler, func() error, error) {
+func httpRouter(bs msgbs.MessageBus) (*http.Server, func() error, error) {
 	adh, adclnup, err := admin_rest.NewRouter(bs)
 	if err != nil {
 		return nil, nil, err
@@ -98,6 +100,8 @@ func httpRouter(bs msgbs.MessageBus) (http.Handler, func() error, error) {
 		return nil
 	}
 
-	return r, clnup, nil
+	port := fmt.Sprintf(":%d", config.Router.Port)
+	srv := &http.Server{Addr: port, Handler: r}
+	return srv, clnup, nil
 
 }

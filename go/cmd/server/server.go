@@ -2,38 +2,35 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/yamad07/monorepo/go/pkg/config"
 	"github.com/yamad07/monorepo/go/pkg/msgbs"
 	"golang.org/x/sync/errgroup"
 )
 
 type Server struct {
-	HTTPHandler http.Handler
-	Subscriber  *msgbs.Subscriber
+	HTTPServer *http.Server
+	Subscriber *msgbs.Subscriber
 }
 
 func NewServer(
-	h http.Handler,
+	h *http.Server,
 	r *msgbs.Subscriber,
 ) Server {
 	return Server{
-		HTTPHandler: h,
-		Subscriber:  r,
+		HTTPServer: h,
+		Subscriber: r,
 	}
 }
 
 func (s Server) Run(ctx context.Context) {
 	g, ctx := errgroup.WithContext(ctx)
 	g.Go(func() error {
-		port := fmt.Sprintf(":%d", config.Router.Port)
-		err := http.ListenAndServe(port, s.HTTPHandler)
+		err := s.HTTPServer.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			return err
 		}
@@ -59,11 +56,13 @@ func (s Server) Run(ctx context.Context) {
 		break
 	}
 
-	_, tcancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, tcancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer tcancel()
 
 	err := g.Wait()
 	if err != nil {
 		os.Exit(2)
 	}
+
+	s.HTTPServer.Shutdown(ctx)
 }
