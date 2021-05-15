@@ -34,6 +34,10 @@ func (r RedisMessageBus) Subscribe(evnt Event) {
 	r.PubSubConn.Subscribe(evnt)
 }
 
+func (r RedisMessageBus) Unsubscribe(evnt Event) {
+	r.PubSubConn.Unsubscribe(evnt)
+}
+
 func (r RedisMessageBus) Receive() interface{} {
 	return r.PubSubConn.Receive()
 }

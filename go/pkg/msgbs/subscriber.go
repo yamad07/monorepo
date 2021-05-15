@@ -49,3 +49,9 @@ func (r Subscriber) Serve() {
 		}(subsc)
 	}
 }
+
+func (r Subscriber) Shutdown() {
+	for evnt := range r.Func {
+		r.MessageBus.Unsubscribe(evnt)
+	}
+}

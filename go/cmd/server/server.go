@@ -65,4 +65,5 @@ func (s Server) Run(ctx context.Context) {
 	}
 
 	s.HTTPServer.Shutdown(ctx)
+	s.Subscriber.Shutdown()
 }
